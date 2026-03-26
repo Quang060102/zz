@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BIA VƯỜN NHÀ BI</title>
+  <style>
+    :root{
+      --ban-height: 60px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px;
+      background: #000;
+      border-bottom: 3px solid #ffb400;
+    }
+
+    .header h1 {
+      color: #ffb400;
+      margin: 0;
+    }
+
+    .ban {
+      text-align: center;
+      padding: 15px;
+      background: #0a0a0a;
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+    }
+
+    .tab-container {
+      display: flex;
+      overflow-x: auto;
+      white-space: nowrap;
+      background: #111;
+      position: sticky;
+      top: var(--ban-height);
+      z-index: 1000;
+      border-bottom: 2px solid #ffb400;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .tab-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 0 0 auto;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 15px;
+      font-weight: bold;
+      padding: 15px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: #ffb400;
+      border-bottom: 3px solid #ffb400;
+    }
+
+  .slider {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  width: 100vw;
+  align-items: flex-start !important;
+  height: 0;
+  min-height: 0 !important;
+  transition: height 0.22s ease;
+}
+
+.slider::-webkit-scrollbar {
+  display: none;
+}
+
+.page {
+  flex: 0 0 100vw !important;
+  width: 100vw !important;
+  min-width: 100vw !important;
+  scroll-snap-align: start;
+  display: block !important;
+  padding: 10px;
+  box-sizing: border-box;
+  height: auto !important;
+  min-height: 0 !important;
+  align-self: flex-start !important;
+}
+
+.page h2 {
+  color: #ffb400;
+  border-left: 4px solid #ffb400;
+  padding-left: 10px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 10px;
+  background: #121214;
+  border-radius: 14px;
+  border: 1px solid #1f1f23;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.item-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.price {
+  color: #ffb400;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.item-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+    .right {
+      display: flex;
+      align-items: center;
+    }
+
+    .qty {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      background: #ffb400;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      font-weight: bold;
+      touch-action: manipulation;
+      color: #000;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #cc9000;
+      transition: all 0.1s;
+      position: relative;
+    }
+
+    button:active {
+      transform: translateY(3px);
+      background: #e6a200;
+      box-shadow: 0 1px 0 #cc9000;
+    }
+
+    .count {
+      min-width: 25px;
+      text-align: center;
+      font-weight: bold;
+      color: #ffb400;
+    }
+
+    .cart-summary {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      padding: 15px 20px;
+      border-top: 3px solid #ffb400;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2000;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+      gap: 12px;
+    }
+
+    .cart-info {
+      font-weight: bold;
+      color: #ffb400;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cart-info small {
+      color: #ccc;
+      font-size: 12px;
+      font-weight: normal;
+    }
+
+    .view-cart-btn {
+      background: #ffb400;
+      color: #000;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 3px 0 #cc9000;
+    }
+
+    .cart-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 3000;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .cart-content {
+      background: #222;
+      border: 2px solid #ffb400;
+      border-radius: 15px;
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .close-cart {
+      float: right;
+      color: #ffb400;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .cart-item-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #333;
+    }
+
+    .cart-item-name {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-item-total {
+      color: #ffb400;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .note-box {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #111;
+      color: white;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+
+    .send {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      background: #ffb400;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .secondary-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #333;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-shadow: none;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ffb400;
+      min-height: 20px;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🍺 BIA VƯỜN NHÀ BI</h1>
+  </div>
+
+  <div class="ban" id="ban-sticky">
+    Bàn:
+    <input
+      list="danh-sach-ban"
+      id="ban"
+      placeholder="Chọn bàn..."
+      style="width: 180px; padding: 10px; border: 2px solid #ff9800; border-radius: 8px; background: #222; color: white; font-size: 16px;"
+    >
+    <datalist id="danh-sach-ban">
+      <option value="Bàn lộc vừng trái">
+      <option value="Bàn lộc vừng giữa">
+      <option value="Bàn lộc vừng phải">
+      <option value="Bàn đào tiên trái">
+      <option value="Bàn đào tiên phải">
+      <option value="Bàn cột đèn ngoài">
+      <option value="Bàn cột đèn trong">
+      <option value="Mang về">
+    </datalist>
+  </div>
+
+  <div class="tab-container" id="tab-container"></div>
+  <div class="slider" id="slider"></div>
+
+  <div class="cart-summary" id="cart-summary">
+    <div class="cart-info">
+      <span>🛒 <span id="total-items">0</span> món</span>
+      <small>Tạm tính: <span id="total-price">0đ</span></small>
+    </div>
+    <button class="view-cart-btn" onclick="toggleCart(true)">Xem giỏ hàng & Gửi 📩</button>
+  </div>
+
+  <div class="cart-overlay" id="cart-overlay">
+    <div class="cart-content">
+      <span class="close-cart" onclick="toggleCart(false)">×</span>
+      <h2 style="color: #ffb400;">🛒 Món đã chọn</h2>
+
+      <div id="cart-list-detail"></div>
+
+      <div style="margin-top: 12px; font-size: 18px; color: #ffb400; font-weight: bold;">
+        Tạm tính: <span id="cart-total-detail">0đ</span>
+      </div>
+
+      <textarea id="order-note" class="note-box" placeholder="Ghi chú đơn, ví dụ: ít cay, lên sau, mang thêm đá..."></textarea>
+
+      <div id="send-status" class="status"></div>
+
+      <button class="secondary-btn" onclick="clearCart()">🗑 Xóa giỏ hàng</button>
+      <button class="send" id="send-btn" onclick="sendOrder()">🚀 GỬI NHÀ BẾP NGAY</button>
+    </div>
+  </div>
+
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbwvs3EgQvwtzNjOfdEn-8hHbWn9wqqwik0H6ikflLjS7x4XVgt7TJd41xzMqCjyUK9CcQ/exec";
+
+    const MENU_DATA = [
+      {
+        id: "page-khai-vi",
+        icon: "🥗",
+        title: "Khai vị",
+        items: [
+          ["dau_ran", "Đậu rán", 30000],
+          ["dau_tam_hanh", "Đậu tẩm hành", 40000],
+          ["nem_chua", "Nem chua", 40000],
+          ["nem_ngua", "Nem Ngựa", 80000],
+          ["gio_bo", "Giò bò", 60000],
+          ["ngo_chien", "Ngô chiên", 40000],
+          ["ca_chi_vang", "Cá chỉ vàng", 80000],
+          ["ca_mai_chao", "Cá mai chao", 110000],
+          ["muc_kho_nuong", "Mực khô nướng", 150000],
+          ["muop_dang_ruoc", "Mướp đắng ruốc", 60000],
+          ["top_mo_dua_chua", "Tóp mỡ dưa chua", 100000],
+          ["hen_xuc_phong_tom", "Hến xúc phồng tôm", 100000],
+          ["bo_xuc_phong_tom", "Bò xúc phồng tôm", 130000],
+          ["nom_tai_heo", "Nộm tai heo", 100000],
+          ["nom_bo", "Nộm bò", 130000],
+          ["nom_sua", "Nộm sứa", 100000],
+          ["trung_ran_la_ngai", "Trứng rán lá ngải", 60000],
+          ["luoi_lon_tran", "Lưỡi lợn trần", 130000],
+          ["quai_lac_tran", "Quai lạc trần", 130000]
+        ]
+      },
+      {
+        id: "page-nuong",
+        icon: "🔥",
+        title: "Món nướng",
+        items: [
+          ["ga_nuong_ca_con", "Gà nướng cả con", 300000],
+          ["tom_nuong", "Tôm nướng", 150000],
+          ["hau_nuong", "Hàu nướng", 100000],
+          ["ca_nuong", "Cá nướng", 200000],
+          ["ba_chi_nuong", "Ba chỉ nướng", 130000],
+          ["doi_sun_nuong", "Dồi sụn nướng", 130000],
+          ["long_nuong", "Lòng nướng", 80000],
+          ["cat_nuong", "Cật nướng", 100000],
+          ["thap_cam_nuong", "Thập cẩm nướng", 150000]
+        ]
+      },
+      {
+        id: "page-mon-xao",
+        icon: "🥘",
+        title: "Món xào",
+        items: [
+          ["rau_xao", "Rau xào", 40000],
+          ["ech_xao_mang", "Ếch xào măng", 120000],
+          ["ngua_xao_rau", "Ngựa xào rau", 130000],
+          ["bap_bo_xao_rau", "Bắp bò xào rau", 130000],
+          ["cho_xao_lan", "Chó xào lăn", 130000],
+          ["xach_xao", "Xách xào", 150000],
+          ["long_xao_dua", "Lòng xào dưa", 80000],
+          ["quai_lac_xao_rau", "Quai lạc xào rau", 150000],
+          ["muop_dang_xao_trung", "Mướp đắng xào trứng", 60000],
+          ["muc_xao", "Mực xào", 200000],
+          ["muc_nau_chua", "Mực nấu chua", 200000],
+          ["muc_hap", "Mực hấp", 200000]
+        ]
+      },
+      {
+        id: "page-mon-chien",
+        icon: "🍳",
+        title: "Món chiên",
+        items: [
+          ["ech_rang_muoi", "Ếch rang muối", 120000],
+          ["ga_rang_muoi", "Gà rang muối", 150000],
+          ["ga_chien_mam", "Gà chiên mắm", 150000],
+          ["vit_rang_rieng", "Vịt rang riềng", 130000],
+          ["chan_ga_chien_mam", "Chân gà chiên mắm", 100000],
+          ["su_lon_chien_mam", "Sú lợn chiên mắm", 130000],
+          ["tom_rang_muoi", "Tôm rang muối", 130000],
+          ["ca_trung_chien_la_lot", "Cá trứng chiên lá lốt", 130000],
+          ["chau_chau_chien", "Châu chấu chiên", 120000],
+          ["ca_bong_chien_la_not", "Cá bống chiên lá nốt", 120000],
+          ["ba_chi_rang_rieng", "Ba chỉ rang riềng", 130000],
+          ["suon_chao_moc_mat", "Sườn chao móc mật", 150000],
+          ["quai_lac_chao_moc_mat", "Quai lạc chao móc mật", 150000]
+        ]
+      },
+      {
+        id: "page-mon-lau",
+        icon: "🍲",
+        title: "Lẩu",
+        items: [
+          ["lau_thai_thap_cam", "Lẩu thái thập cẩm", 500000],
+          ["lau_ech", "Lẩu ếch", 400000, "400k-600k"],
+          ["lau_xuong_dau", "Lẩu xương đầu", 400000]
+        ]
+      },
+      {
+        id: "page-com-my",
+        icon: "🍛",
+        title: "Cơm mỳ",
+        items: [
+          ["com_rang_thap_cam", "Cơm rang thập cẩm", 60000],
+          ["com_rang_dua_bo", "Cơm rang dưa bò", 80000],
+          ["com_rang_hai_san", "Cơm rang hải sản", 100000],
+          ["mi_xao", "Mì xào", 60000],
+          ["canh_chua_ca_ria", "Canh chua cá rìa", 100000],
+          ["canh_trung", "Canh trứng", 60000]
+        ]
+      },
+      {
+        id: "page-do-uong",
+        icon: "🥤",
+        title: "Đồ uống",
+        items: [
+          ["bia_hoi", "Bia hơi", 8000],
+          ["bia_lon", "Bia Lon", 13000],
+          ["bia_chai", "Bia chai", 14000],
+          ["nuoc_ngot", "Nước ngọt", 15000],
+          ["nuoc_loc", "Nước lọc", 10000],
+          ["ruou", "Rượu", 30000],
+          ["thuoc_la", "Thuốc lá", 20000]
+        ]
+      }
+    ];
+
+    const MENU_INDEX = {};
+    MENU_DATA.forEach(group => {
+      group.items.forEach(item => {
+        const [id, name, price] = item;
+        MENU_INDEX[id] = { id, name, price, category_id: group.id, category_name: group.title };
+      });
+    });
+
+    let cart = {};
+    let isSending = false;
+    let sliderHeightTimer = null;
+
+    function formatMoney(value) {
+      return new Intl.NumberFormat("vi-VN").format(value) + "đ";
+    }
+
+    function formatPriceText(item) {
+      if (item[3]) return item[3];
+      return Math.round(item[2] / 1000) + "k";
+    }
+
+    function renderMenu() {
+      const tabContainer = document.getElementById("tab-container");
+      const slider = document.getElementById("slider");
+
+      tabContainer.innerHTML = MENU_DATA.map((group, index) => `
+        <button class="tab-btn ${index === 0 ? "active" : ""}" onclick="openTab(event, '${group.id}')">
+          ${group.icon} ${group.title}
+        </button>
+      `).join("");
+
+      slider.innerHTML = MENU_DATA.map(group => `
+        <div class="page" id="${group.id}">
+          <h2>${group.icon} ${group.title}</h2>
+          ${group.items.map((item, itemIndex) => {
+            const [id, name] = item;
+            return `
+  <div class="item">
+    <div class="item-text">
+      <div class="item-name">${name}</div>
+      <span class="price">${formatMoney(item[2])}</span>
+    </div>
+
+    <div class="right">
+      <div class="qty">
+        <button onclick="minus('${id}')">-</button>
+        <span id="count-${id}" class="count">0</span>
+        <button onclick="add('${id}')">+</button>
+      </div>
+    </div>
+  </div>
+
+            `;
+          }).join("")}
+        </div>
+      `).join("");
+    }
+
+    function add(itemId) {
+      const item = MENU_INDEX[itemId];
+      if (!item) return;
+
+      if (!cart[itemId]) {
+        cart[itemId] = {
+          item_id: item.id,
+          item_name: item.name,
+          unit_price: item.price,
+          qty: 0
+        };
+      }
+
+      cart[itemId].qty++;
+      update();
+    }
+
+    function minus(itemId) {
+      if (!cart[itemId]) return;
+      cart[itemId].qty--;
+      if (cart[itemId].qty <= 0) delete cart[itemId];
+      update();
+    }
+
+    function update() {
+      const listDetail = document.getElementById("cart-list-detail");
+      const summary = document.getElementById("cart-summary");
+      const totalItemsSpan = document.getElementById("total-items");
+      const totalPriceSpan = document.getElementById("total-price");
+      const totalPriceDetail = document.getElementById("cart-total-detail");
+
+      listDetail.innerHTML = "";
+      let totalCount = 0;
+      let totalPrice = 0;
+
+      document.querySelectorAll(".count").forEach(e => e.innerText = 0);
+
+      Object.values(cart).forEach(item => {
+        totalCount += item.qty;
+        totalPrice += item.qty * item.unit_price;
+
+        const row = document.createElement("div");
+        row.className = "cart-item-row";
+        row.innerHTML = `
+          <div class="cart-item-name">
+            <b>${item.item_name}</b>
+            <div style="font-size:13px; color:#ccc;">${formatMoney(item.unit_price)} x ${item.qty}</div>
+          </div>
+          <div class="cart-item-total">${formatMoney(item.qty * item.unit_price)}</div>
+        `;
+        listDetail.appendChild(row);
+
+        const countEl = document.getElementById(`count-${item.item_id}`);
+        if (countEl) countEl.innerText = item.qty;
+      });
+
+      summary.style.display = totalCount > 0 ? "flex" : "none";
+      totalItemsSpan.innerText = totalCount;
+      totalPriceSpan.innerText = formatMoney(totalPrice);
+      totalPriceDetail.innerText = formatMoney(totalPrice);
+    }
+
+    function toggleCart(show) {
+      document.getElementById("cart-overlay").style.display = show ? "block" : "none";
+      document.getElementById("send-status").innerText = "";
+    }
+
+    function clearCart() {
+      cart = {};
+      document.getElementById("order-note").value = "";
+      update();
+    }
+
+    async function sendOrder() {
+      const inputBan = document.getElementById("ban");
+      const tableName = inputBan ? inputBan.value.trim() : "";
+      const note = document.getElementById("order-note").value.trim();
+
+      if (!tableName) {
+        alert("⚠️ Chọn số bàn đã nhé!");
+        return;
+      }
+
+      const items = Object.values(cart);
+      if (items.length === 0) {
+        alert("🛒 Chọn món đã bạn ơi!");
+        return;
+      }
+
+      if (isSending) return;
+      isSending = true;
+
+      const sendBtn = document.getElementById("send-btn");
+      const statusEl = document.getElementById("send-status");
+      sendBtn.disabled = true;
+      sendBtn.innerText = "ĐANG GỬI...";
+      statusEl.innerText = "Đang gửi đơn...";
+
+      const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
+      const totalPrice = items.reduce((sum, item) => sum + item.qty * item.unit_price, 0);
+
+      const payload = {
+        order_id: "OD" + Date.now(),
+        table_name: tableName,
+        note: note,
+        total_qty: totalQty,
+        total_price: totalPrice,
+        created_at: new Date().toISOString(),
+        items: items.map(item => ({
+          item_id: item.item_id,
+          item_name: item.item_name,
+          qty: item.qty,
+          unit_price: item.unit_price,
+          line_total: item.qty * item.unit_price
+        }))
+      };
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || data.status !== "success") {
+          throw new Error(data.message || "Gửi đơn thất bại");
+        }
+
+        statusEl.innerText = `✅ Đã gửi: ${tableName}`;
+        alert(`✅ Gửi đơn thành công: ${tableName}`);
+
+        cart = {};
+        document.getElementById("order-note").value = "";
+        update();
+        toggleCart(false);
+
+      } catch (err) {
+        statusEl.innerText = "❌ " + (err.message || "Lỗi gửi đơn");
+        alert("❌ Gửi đơn thất bại: " + (err.message || "Lỗi không xác định"));
+      } finally {
+        isSending = false;
+        sendBtn.disabled = false;
+        sendBtn.innerText = "🚀 GỬI NHÀ BẾP NGAY";
+      }
+    }
+
+   function openTab(evt, tabId) {
+  const slider = document.getElementById("slider");
+  const targetPage = document.getElementById(tabId);
+  if (!slider || !targetPage) return;
+
+  slider.scrollTo({
+    left: targetPage.offsetLeft,
+    behavior: "smooth"
+  });
+
+  updateActiveTab(tabId);
+
+  setTimeout(() => updateSliderHeight(true), 60);
+  setTimeout(() => updateSliderHeight(), 180);
+  setTimeout(() => updateSliderHeight(), 320);
+  setTimeout(() => updateSliderHeight(), 520);
+}
+
+    function updateActiveTab(tabId) {
+      const buttons = document.getElementsByClassName("tab-btn");
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+        if (buttons[i].getAttribute('onclick').includes(tabId)) {
+          buttons[i].classList.add("active");
+        }
+      }
+    }
+
+    function updateStickyOffsets() {
+      const banEl = document.getElementById("ban-sticky");
+      if (!banEl) return;
+      document.documentElement.style.setProperty("--ban-height", banEl.offsetHeight + "px");
+    }
+
+   let sliderResizeObserver = null;
+let sliderScrollTimer = null;
+
+function getActivePageIndex() {
+  const slider = document.getElementById("slider");
+  if (!slider) return 0;
+  const pageWidth = slider.clientWidth || window.innerWidth;
+  return Math.max(0, Math.round(slider.scrollLeft / pageWidth));
+}
+
+function getActivePage() {
+  const pages = document.querySelectorAll(".page");
+  const index = getActivePageIndex();
+  return pages[index] || pages[0] || null;
+}
+
+function updateSliderHeight(force = false) {
+  const slider = document.getElementById("slider");
+  const currentPage = getActivePage();
+  if (!slider || !currentPage) return;
+
+  requestAnimationFrame(() => {
+    const newHeight = Math.ceil(currentPage.scrollHeight);
+
+    if (force) {
+      slider.style.transition = "none";
+      slider.style.height = newHeight + "px";
+      void slider.offsetHeight;
+      slider.style.transition = "height 0.22s ease";
+    } else {
+      slider.style.height = newHeight + "px";
+    }
+  });
+}
+    function bindSliderSync() {
+  const slider = document.getElementById("slider");
+  if (!slider) return;
+
+  slider.addEventListener("scroll", function() {
+    const scrollLeft = this.scrollLeft;
+    const pageWidth = this.clientWidth;
+    const activeIndex = Math.round(scrollLeft / pageWidth);
+
+    const buttons = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].classList.remove("active");
+    }
+
+    if (buttons[activeIndex]) {
+      buttons[activeIndex].classList.add("active");
+      buttons[activeIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center"
+      });
+    }
+
+    updateSliderHeight();
+
+    clearTimeout(sliderScrollTimer);
+    sliderScrollTimer = setTimeout(() => {
+      updateSliderHeight();
+    }, 140);
+  });
+
+  window.addEventListener("resize", function() {
+    updateStickyOffsets();
+    updateSliderHeight(true);
+  });
+}
+
+   renderMenu();
+updateStickyOffsets();
+bindSliderSync();
+update();
+
+setTimeout(() => updateSliderHeight(true), 100);
+setTimeout(() => updateSliderHeight(), 300);
+setTimeout(() => updateSliderHeight(), 600);
+setTimeout(() => updateSliderHeight(), 900);
+  </script>
+
+</body>
+</html>
